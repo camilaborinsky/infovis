@@ -60,9 +60,18 @@ function App() {
     <div className="App">
       <header className="App-header">
         <div style={{ display: "flex" }}>
-          <button> XYChart</button>
-          <button> OrdinalFrame</button>
-          <button> NetworkFrame</button>
+          <button onClick={() => handleClickChartButton("XYChart")}>
+            {" "}
+            XYChart
+          </button>
+          <button onClick={() => handleClickChartButton("OrdinalChart")}>
+            {" "}
+            OrdinalFrame
+          </button>
+          <button onClick={() => handleClickChartButton("NetworkChart")}>
+            {" "}
+            NetworkFrame
+          </button>
         </div>
         {currentChart(chartName)}
       </header>

@@ -49,119 +49,140 @@ const processCSV = (str, delim = ",") => {
 }
 const OrdinalChart = () => {
   const [data, setData] = useState([])
-  useEffect(() => {
-    const load = async () => {
-      const response = await fetch("resources/genres_v2.csv")
-      const reader = response.body.getReader()
-      const result = await reader.read()
-      const decoder = new TextDecoder("utf-8")
-      const csv = await decoder.decode(result.value)
-      const jsons = processCSV(csv)
-      setData(jsons)
-      console.log("JSONS===", jsons)
-      const genresSummary = jsons.reduce(
-        (prev, currentValue, currentIndex, array) => {
-          //console.log("ARRAY", array)
-          let list
-          if (currentValue.genre) {
-            const genreSummary = array.find(
-              (value, index) => currentValue.genre === value.genre
-            )
-            console.log(genreSummary)
-            if (genreSummary) {
-              console.log("chau")
-              const updatedGenreSummary = {
-                genre: currentValue.genre,
-                acousticness:
-                  currentValue.acousticness + genreSummary.acousticness,
-                danceability:
-                  currentValue.danceability + genreSummary.danceability,
-                energy: currentValue.enery + genreSummary.enery,
-                instrumentalness:
-                  currentValue.instrumentalness + genreSummary.instrumentalness,
-                liveness: currentValue.liveness + genreSummary.liveness,
-                loudness: currentValue.loudness + genreSummary.loudness,
-                speechiness:
-                  currentValue.speechiness + genreSummary.speechiness,
-                tempo: currentValue.tempo + genreSummary.tempo,
-                valence: currentValue.valence + genreSummary.valence,
-                amount: genreSummary.amount + 1,
-              }
-              list = array
-              const genreIndex = array.findIndex(
-                (value, index) => currentValue.genre === value.genre
-              )
-              list[genreIndex] = updatedGenreSummary
-            } else {
-              console.log("hola")
-              list = [...array]
+  // useEffect(() => {
+  //   const load = async () => {
+  //     const response = await fetch("resources/genres_v2.csv")
+  //     const reader = response.body.getReader()
+  //     const result = await reader.read()
+  //     const decoder = new TextDecoder("utf-8")
+  //     const csv = await decoder.decode(result.value)
+  //     const jsons = processCSV(csv)
+  //     setData(jsons)
+  //     console.log("JSONS===", jsons)
+  //     // const genresSummary = jsons.reduce(
+  //     //   (prev, currentValue, currentIndex, array) => {
+  //     //     //console.log("ARRAY", array)
+  //     //     let list
+  //     //     if (currentValue.genre) {
+  //     //       const genreSummary = array.find(
+  //     //         (value, index) => currentValue.genre === value.genre
+  //     //       )
+  //     //       console.log(genreSummary)
+  //     //       if (genreSummary) {
+  //     //         console.log("chau")
+  //     //         const updatedGenreSummary = {
+  //     //           genre: currentValue.genre,
+  //     //           acousticness:
+  //     //             currentValue.acousticness + genreSummary.acousticness,
+  //     //           danceability:
+  //     //             currentValue.danceability + genreSummary.danceability,
+  //     //           energy: currentValue.enery + genreSummary.enery,
+  //     //           instrumentalness:
+  //     //             currentValue.instrumentalness + genreSummary.instrumentalness,
+  //     //           liveness: currentValue.liveness + genreSummary.liveness,
+  //     //           loudness: currentValue.loudness + genreSummary.loudness,
+  //     //           speechiness:
+  //     //             currentValue.speechiness + genreSummary.speechiness,
+  //     //           tempo: currentValue.tempo + genreSummary.tempo,
+  //     //           valence: currentValue.valence + genreSummary.valence,
+  //     //           amount: genreSummary.amount + 1,
+  //     //         }
+  //     //         list = array
+  //     //         const genreIndex = array.findIndex(
+  //     //           (value, index) => currentValue.genre === value.genre
+  //     //         )
+  //     //         list[genreIndex] = updatedGenreSummary
+  //     //       } else {
+  //     //         console.log("hola")
+  //     //         list = [...array]
 
-              list.append({
-                genre: currentValue.genre,
-                acousticness: currentValue.acousticness,
-                danceability: currentValue.danceability,
-                energy: currentValue.enery,
-                instrumentalness: currentValue.instrumentalness,
-                liveness: currentValue.liveness,
-                loudness: currentValue.loudness,
-                speechiness: currentValue.speechiness,
-                tempo: currentValue.tempo,
-                valence: currentValue.valence,
-                amount: 0,
-              })
-            }
-            return list
-          } else {
-            return array
-          }
-        },
-        []
-      )
-      console.log("GENRES SUMMARY===", genresSummary)
-    }
-    load()
-  }, [])
+  //     //         list.append({
+  //     //           genre: currentValue.genre,
+  //     //           acousticness: currentValue.acousticness,
+  //     //           danceability: currentValue.danceability,
+  //     //           energy: currentValue.enery,
+  //     //           instrumentalness: currentValue.instrumentalness,
+  //     //           liveness: currentValue.liveness,
+  //     //           loudness: currentValue.loudness,
+  //     //           speechiness: currentValue.speechiness,
+  //     //           tempo: currentValue.tempo,
+  //     //           valence: currentValue.valence,
+  //     //           amount: 0,
+  //     //         })
+  //     //       }
+  //     //       return list
+  //     //     } else {
+  //     //       return array
+  //     //     }
+  //     //   },
+  //     //   []
+  //     // )
+  //     // console.log("GENRES SUMMARY===", genresSummary)
+  //   }
+  //   load()
+  // }, [])
+  const genresData = [
+    {
+      genre: "Trap",
+      color: colors.Trap,
+      acousticness: 0.53,
+      danceability: 0.23,
+      energy: 0.87,
+      instrumentalness: 0.15,
+      liveness: 0.65,
+      loudness: 0.68,
+      speechiness: 0.96,
+      tempo: 0.49,
+      valence: 0.33,
+    },
+    {
+      genre: "Pop",
+      color: colors.Pop,
+      acousticness: 0.8,
+      danceability: 0.44,
+      energy: 0.23,
+      instrumentalness: 0.78,
+      liveness: 0.23,
+      loudness: 0.52,
+      speechiness: 0.87,
+      tempo: 0.34,
+      valence: 0.56,
+    },
+    {
+      genre: "Techno",
+      color: colors.Techno,
+      acousticness: 0.33,
+      danceability: 0.43,
+      energy: 0.99,
+      instrumentaness: 0.4,
+      liveness: 0.65,
+      loudness: 0.55,
+      speechiness: 0.08,
+      tempo: 0.89,
+      valence: 0.99,
+    },
+  ]
 
+  const genresAttributes = genresData.map((item) => {
+    console.log("item=", item)
+    return Object.keys(item)
+      .filter((val) => val !== "genre" && val !== "color")
+      .map((key) => {
+        console.log("key", key)
+        return {
+          name: item.genre,
+          color: item.color,
+          attribute: key,
+          value: item[key],
+        }
+      })
+  })
+  console.log("ATTRIBUTES", genresAttributes)
   const frameProps = {
     data: [
-      {
-        name: "Pikachu",
-        color: "#e0d33a",
-        attribute: "attack",
-        value: 55,
-        defense: 40,
-        speed: 90,
-        hp: 35,
-      },
-      { name: "Pikachu", color: "#e0d33a", attribute: "defense", value: 40 },
-      {
-        name: "Pikachu",
-        color: "#e0d33a",
-        attribute: "energy",
-        value: 55,
-        defense: 40,
-        speed: 90,
-        hp: 35,
-      },
-      {
-        name: "Raichu",
-        color: colors.Hardstyle,
-        attribute: "attack",
-        value: 80,
-        defense: 40,
-        speed: 90,
-        hp: 35,
-      },
-      { name: "Raichu", color: "#e0d33a", attribute: "defense", value: 40 },
-      {
-        name: "Raichu",
-        color: "#e0d33a",
-        attribute: "energy",
-        value: 30,
-        defense: 40,
-        speed: 90,
-        hp: 35,
-      },
+      ...genresAttributes[0],
+      ...genresAttributes[1],
+      ...genresAttributes[2],
     ],
     size: [500, 500],
     margin: { left: 40, top: 50, bottom: 75, right: 120 },
@@ -184,23 +205,17 @@ const OrdinalChart = () => {
       strokeOpacity: 0.5,
       fillOpacity: 0.5,
     }),
-    title: "Pokemon Base Stats",
+    title: "Spotify Genre Stats",
     foregroundGraphics: [
       <g transform="translate(420, 73)" key="legend">
-        <text key={1} fill={"#ac58e5"}>
-          New York
+        <text key={1} fill={colors.Pop}>
+          Pop
         </text>
-        <text key={1} y={20} fill={"#E0488B"}>
-          Las Vegas
+        <text key={1} y={20} fill={colors.Techno}>
+          Techno
         </text>
-        <text key={1} y={40} fill={"#9fd0cb"}>
-          San Diego
-        </text>
-        <text key={1} y={60} fill={"#e0d33a"}>
-          Denver
-        </text>
-        <text key={1} y={80} fill={"#7566ff"}>
-          Oakland
+        <text key={1} y={40} fill={colors.Trap}>
+          Trap
         </text>
       </g>,
     ],
@@ -216,7 +231,6 @@ const OrdinalChart = () => {
   // data.length > 0 ? (
   return (
     <>
-      holaaa
       <OrdinalFrame {...frameProps} />
     </>
   )
