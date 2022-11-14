@@ -5,10 +5,23 @@ import { scaleLinear } from "d3-scale";
 const steps = ["white", "#e0d33a"];
 const thresholds = scaleLinear().range(steps);
 
+//Dictionary with keys Trap, Techno, Techhouse, Trance, Psytrance, Dark Trap, DnB (drums and bass), Hardstyle, Underground Rap, Trap Metal, Emo, Rap, RnB, Pop and Hiphop and values different colors
 const colors = {
-  "Ex Machina": "#ac58e5",
-  "Far from the Madding Crowd": "#E0488B",
-  "The Longest Ride": "#9fd0cb",
+  Trap: "#e0d33a",
+  Techno: "#038f67",
+  Techhouse: "#598f03",
+  Trance: "#8f4b03",
+  Psytrance: "#e0743a",
+  "Dark Trap": "#e03a42",
+  "DnB (drums and bass)": "#e03a85",
+  Hardstyle: "#c73ae0",
+  "Underground Rap": "#693ae0",
+  "Trap Metal": "##3a77e0",
+  Emo: "#3adae0",
+  Rap: "#f9d423",
+  RnB: "#9fd0cb",
+  Pop: "#E0488B",
+  Hiphop: "#ac58e5",
 };
 
 export default (coordinates) => {
@@ -29,7 +42,7 @@ export default (coordinates) => {
     pointStyle: (d) => {
       return {
         r: 2,
-        fill: d && colors[d.title],
+        fill: d && colors[d.genre],
       };
     },
     title: (

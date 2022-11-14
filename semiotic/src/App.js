@@ -6,11 +6,25 @@ import { useEffect, useState } from "react";
 const processCSV = (str, delim = ",") => {
   const headers = str.slice(0, str.indexOf("\n")).split(delim);
   const rows = str.slice(str.indexOf("\n") + 1).split("\n");
+  const textHeaders = [
+    "id",
+    "type",
+    "uri",
+    "track_href",
+    "analysis_url",
+    "genre",
+    "song_name",
+    "title",
+  ];
 
   const newArray = rows.map((row) => {
     const values = row.split(delim);
     const eachObject = headers.reduce((obj, header, i) => {
-      obj[header] = values[i];
+      if (textHeaders.includes(header)) {
+        obj[header] = values[i];
+      } else {
+        obj[header] = parseFloat(values[i]);
+      }
       return obj;
     }, {});
     return eachObject;
