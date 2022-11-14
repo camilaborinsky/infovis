@@ -1,5 +1,7 @@
-import { XYFrame } from "semiotic"
-const steps = ["white", "#e0d33a"]
+import { XYFrame } from "semiotic";
+import { useEffect, useState } from "react";
+import { processCSV } from "../App";
+const steps = ["white", "#e0d33a"];
 //const thresholds = scaleLinear().range(steps)
 
 //Dictionary with keys Trap, Techno, Techhouse, Trance, Psytrance, Dark Trap, DnB (drums and bass), Hardstyle, Underground Rap, Trap Metal, Emo, Rap, RnB, Pop and Hiphop and values different colors
@@ -19,19 +21,53 @@ export const colors = {
   RnB: "#9fd0cb",
   Pop: "#E0488B",
   Hiphop: "#ac58e5",
-}
+};
+export const colorArray = [
+  "#e0d33a",
+  "#038f67",
+  "#598f03",
+  "#8f4b03",
+  "#e0743a",
+  "#e03a42",
+  "#e03a85",
+  "#c73ae0",
+  "#693ae0",
+  "##3a77e0",
+  "#3adae0",
+  "#f9d423",
+  "#9fd0cb",
+  "#E0488B",
+  "#ac58e5",
+];
 
 const XYChart = (coordinates) => {
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    const load = async () => {
+      const response = await fetch("resources/genres_v2.csv");
+      const reader = response.body.getReader();
+      const result = await reader.read();
+      const decoder = new TextDecoder("utf-8");
+      const csv = await decoder.decode(result.value);
+      const jsons = processCSV(csv);
+      console.log("LENGT==", jsons.length);
+      // const sample = [];
+      // for (let i = 0; i < 200; i++) {
+      //   const idx = Math.random() * jsons.length;
+      //   sample.push(jsons[idx]);
+      // }
+      // console.log(sample);
+      setData(jsons);
+    };
+    load();
+  }, []);
   const frameProps = {
-    points: [
-      { liveness: 100, enery: 500, genre: "Techno" },
-      { liveness: 80, enery: 550, genre: "Trap" },
-    ],
+    points: data,
     //summaries: [{ coordinates: coordinates }],
-    size: [700, 400],
+    size: [1200, 500],
     margin: { left: 60, bottom: 90, right: 10, top: 40 },
     //summaryType: "heatmap",
-    xAccessor: "liveness",
+    xAccessor: "danceability",
     yAccessor: "energy",
     yExtent: [0],
     xExtent: [0],
@@ -41,20 +77,21 @@ const XYChart = (coordinates) => {
     //   strokeWidth: 0.5,
     // }),
     pointStyle: (d) => {
+      const idx = Math.random() * Object.keys(colors).length;
       return {
-        r: 5,
-        fill: d && colors[d.genre],
-      }
+        r: d.liveness * 10,
+        fill: colorArray[Math.floor(idx)],
+      };
     },
     title: <text textAnchor="middle">Songs Liveness vs Energy</text>,
     axes: [
-      { orient: "left", label: "Enery" },
-      { orient: "bottom", label: { name: "Liveness" } },
+      { orient: "left", label: "Energy" },
+      { orient: "bottom", label: { name: "Danceability" } },
     ],
     showLinePoints: true,
     showSummaryPoints: true,
-  }
+  };
 
-  return <XYFrame {...frameProps} />
-}
-export default XYChart
+  return <XYFrame {...frameProps} />;
+};
+export default XYChart;
