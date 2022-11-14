@@ -1,11 +1,15 @@
-import logo from "./logo.svg";
-import "./App.css";
-import XYChart from "./charts/xychart";
-import { useEffect, useState } from "react";
+import logo from "./logo.svg"
+import "./App.css"
+import XYChart, { colors } from "./charts/xychart"
+import { useEffect, useState } from "react"
+import { OrdinalFrame } from "semiotic"
+import Xychart from "./charts/xychart"
+import OrdinalChart from "./charts/OrdinalChart"
+import NetworkChart from "./charts/NetworkChart"
 
 const processCSV = (str, delim = ",") => {
-  const headers = str.slice(0, str.indexOf("\n")).split(delim);
-  const rows = str.slice(str.indexOf("\n") + 1).split("\n");
+  const headers = str.slice(0, str.indexOf("\n")).split(delim)
+  const rows = str.slice(str.indexOf("\n") + 1).split("\n")
   const textHeaders = [
     "id",
     "type",
@@ -15,50 +19,55 @@ const processCSV = (str, delim = ",") => {
     "genre",
     "song_name",
     "title",
-  ];
+  ]
 
   const newArray = rows.map((row) => {
-    const values = row.split(delim);
+    const values = row.split(delim)
     const eachObject = headers.reduce((obj, header, i) => {
       if (textHeaders.includes(header)) {
-        obj[header] = values[i];
+        obj[header] = values[i]
       } else {
-        obj[header] = parseFloat(values[i]);
+        obj[header] = parseFloat(values[i])
       }
-      return obj;
-    }, {});
-    return eachObject;
-  });
+      return obj
+    }, {})
+    return eachObject
+  })
 
-  return newArray;
-};
+  return newArray
+}
 
 function App() {
-  const [data, setData] = useState([]);
-  useEffect(() => {
-    const load = async () => {
-      const response = await fetch("resources/genres_v2.csv");
-      const reader = response.body.getReader();
-      const result = await reader.read();
-      const decoder = new TextDecoder("utf-8");
-      const csv = await decoder.decode(result.value);
-      const jsons = processCSV(csv);
-      setData(jsons);
-    };
-    load();
-  }, []);
-
-  //read data from csv
-  if (data) console.log(data[0]);
   // const data = csv.toObjects();
   // console.log(data);
+  const [chartName, setChartName] = useState("XYChart")
+  const handleClickChartButton = (chartName) => {
+    setChartName(chartName)
+  }
+
+  const currentChart = (chartName) => {
+    if (chartName === "XYChart") {
+      return <Xychart />
+    } else if (chartName === "OrdinalChart") {
+      return <OrdinalChart />
+    } else if (chartName === "NetworkChart") {
+      return <NetworkChart />
+    } else {
+      return <div>current chart not found</div>
+    }
+  }
   return (
     <div className="App">
       <header className="App-header">
-        {data.length > 0 ? <XYChart {...data} /> : <h2>Loading...</h2>}
+        <div style={{ display: "flex" }}>
+          <button> XYChart</button>
+          <button> OrdinalFrame</button>
+          <button> NetworkFrame</button>
+        </div>
+        {currentChart(chartName)}
       </header>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
